@@ -1,28 +1,36 @@
 #!/usr/bin/python3
-from sys import argv
+def is_prime(n):
+  """Efficiently checks if a number is prime."""
+  if n <= 1:
+    return False
+  for i in range(2, int(n**0.5) + 1):
+    if n % i == 0:
+      return False
+  return True
 
-def factorize(value):
-    """Print a simple decomposition of an integer > 1"""
-    i = 2
-    if value < 2:
-        return
-    while value != 1:
-        if value % i == 0:
-            value = value // i
-            print("{:.0f}={:.0f}*{:.0f}".format(value*i, value, i))
-        else:
-            i += 1
+def factorize(n):
+  """Factors a number into two smaller numbers, or returns 'prime' if not factorable."""
+  if n == 1:
+    return "1"
+  if is_prime(n):
+    return "prime"
+  for i in range(2, int(n**0.5) + 1):
+    if n % i == 0:
+      return f"{n}={i}*{n//i}"
 
-if len(argv) != 2:
-    print("Usage: {} <file>".format(argv[0]))
-    exit()
+def main():
+  """Reads numbers from a file and prints their factorizations."""
+  try:
+    with open(sys.argv[1], "r") as file:
+      for line in file:
+        number = int(line.strip())
+        factorization = factorize(number)
+        print(factorization)
+  except FileNotFoundError:
+    print("Error: File not found")
+  except ValueError:
+    print("Error: Invalid input format")
 
-try:
-    with open(argv[1]) as file:
-        for line in file:
-            value = int(line.strip())
-            factorize(value)
-except FileNotFoundError:
-    print("Error: File not found.")
-except ValueError:
-    print("Error: Invalid value in file.")
+if __name__ == "__main__":
+  import sys
+  main()
